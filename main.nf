@@ -12,39 +12,39 @@ NEXTFLOW - DSL2 - Meta-analysis using METAL with nextflow
 
 Meta-analysis parameters
 ===================================
-grm_plink_input   :  ${params.grm_plink_input}
+meta-analysis_files   :  ${params.meta_file}
+sumstat_files         :  ${params.sumstat_files}
 
 
 Plotting parameters
 ===================================
-bgen_prefix       :  ${params.bgen_prefix}
-bgen_suffix       :  ${params.bgen_suffix}
-bgen_path         :  ${params.bgen_path}
-chromosomes       :  ${params.chrom}
-sampleFile        :  ${params.sampleFile}
-vcfField          :  ${params.vcfField}
-minMAC            :  ${params.minMAC}
-minMAF            :  ${params.minMAF}
 """
 
+
 /* Include processes from saige_processes.nf */
-include {  } from './processes'
+include { run_metal; plot_results } from './processes'
 
 
 workflow {
 
    Channel
       .fromPath(params.meta_file)
-      .ifEmpty { exit 1, "Cannot find pheno_File file : ${params.meta_file}" } 
+      .ifEmpty { exit 1, "Cannot find METAL script file : ${params.meta_file}" } 
       .set{ meta_file_ch }
 
-    run_metal(meta_file_ch)
+   Channel
+      .fromPath(params.sumstat_files)
+      .ifEmpty { exit 1, "Cannot find summary statistics files : ${params.sumstat_files}" }
+      .collect() 
+      .set{ sumstat_dir_ch }
 
-    /*reformat_results()
+   sumstat_dir_ch.view()
 
-    plot_results()
+   run_metal(meta_file_ch, sumstat_dir_ch)
 
-    extract_top_hits() */
+   plot_results(run_metal.out.meta_file_name,run_metal.out.metal_out)
+
+    /*extract_top_hits() */
 
 
 }
