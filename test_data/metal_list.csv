@@ -1,0 +1,4 @@
+metal_script,sumstats_dir
+/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/test_1.metal.txt,/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/meta_dir_1
+/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/test_2.metal.txt,/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/meta_dir_2
+/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/original.metal.txt,/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/meta_dir_3

@@ -22,5 +22,11 @@ Building a singularity sif file from the docker container on Dockerhub:
 singularity build meta_metal.2021_07.sif docker-daemon://meta_metal:latest
 
 ## From public Dockerhub
-singularity pull meta_metal.2021_07.sif docker://wuennemannflorian/meta_metal:latest
+singularity pull -F meta_metal.2021_07.sif docker://wuennemannflorian/meta_metal:latest
+
+## For VEP singularity container
+singularity pull -F vep_140.3.sif docker://ensemblorg/ensembl-vep:release_104.3
+
+## Annovar
+singularity pull -F annovar.sif docker://bioinfochrustrasbourg/annovar:2018Apr16
 ```

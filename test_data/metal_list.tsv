@@ -1,0 +1,3 @@
+metal_script	sumstats_dir
+test_1.metal.txt	./test_data/meta_dir_1
+test_2.metal.txt	./test_data/meta_dir_2

@@ -14,6 +14,7 @@ Meta-analysis parameters
 ===================================
 meta-analysis_files   :  ${params.meta_file}
 sumstat_files         :  ${params.sumstat_files}
+index                 :  ${params.index}
 
 
 Plotting parameters
@@ -26,21 +27,16 @@ include { run_metal; plot_results } from './processes'
 
 
 workflow {
-
+   
    Channel
-      .fromPath(params.meta_file)
-      .ifEmpty { exit 1, "Cannot find METAL script file : ${params.meta_file}" } 
-      .set{ meta_file_ch }
+    .fromPath(params.index)
+    .splitCsv(header:true)
+    .map{ row-> tuple(row.metal_script, row.sumstats_dir) }
+    .set { samples_ch }
 
-   Channel
-      .fromPath(params.sumstat_files)
-      .ifEmpty { exit 1, "Cannot find summary statistics files : ${params.sumstat_files}" }
-      .collect() 
-      .set{ sumstat_dir_ch }
+   run_metal(samples_ch)
 
-   sumstat_dir_ch.view()
-
-   run_metal(meta_file_ch, sumstat_dir_ch)
+   annotate_variants(run_metal.out.meta_file_name,run_metal.out.metal_out)
 
    plot_results(run_metal.out.meta_file_name,run_metal.out.metal_out)
 

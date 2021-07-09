@@ -8,7 +8,7 @@ RUN wget http://csg.sph.umich.edu/abecasis/Metal/download/Linux-metal.tar.gz \
     && rm Linux-metal.tar.gz
 
 ## Install 
-RUN install2.r qqman data.table magrittr tidyr dplyr R.utils
+RUN install2.r qqman data.table magrittr tidyr dplyr R.utils CMplot
 
 RUN mkdir /opt/bin
 COPY bin/* /opt/bin/
