@@ -6,4 +6,5 @@ nextflow run main.nf -resume  \
 --outdir "./test_out" \
 --index "./test_data/metal_list.csv" \
 --plot_types "qqman" \
---annovar_cache_dir "/home/florian/Programs/annovar_annotations"
+--vep_cache_dir "/home/florian/Postdoc/References/VEP_cache" \
+--metal_scheme "SAMPLESIZE"

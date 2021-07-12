@@ -12,9 +12,10 @@ NEXTFLOW - DSL2 - Meta-analysis using METAL with nextflow
 
 Meta-analysis parameters
 ===================================
-meta-analysis_files   :  ${params.meta_file}
-sumstat_files         :  ${params.sumstat_files}
-index                 :  ${params.index}
+meta-analysis_files :   ${params.meta_file}
+sumstat_files       :   ${params.sumstat_files}
+index               :   ${params.index}
+vep cache dir       :   ${params.vep_cache_dir}
 
 
 Plotting parameters
@@ -23,7 +24,7 @@ Plotting parameters
 
 
 /* Include processes from saige_processes.nf */
-include { run_metal; plot_results } from './processes'
+include { run_metal; annotate_variants; plot_results } from './processes'
 
 
 workflow {
@@ -36,12 +37,9 @@ workflow {
 
    run_metal(samples_ch)
 
-   annotate_variants(run_metal.out.meta_file_name,run_metal.out.metal_out)
+   annotate_variants(run_metal.out.meta_file_name,run_metal.out.metal_out, params.vep_cache_dir, params.metal_scheme)
 
    plot_results(run_metal.out.meta_file_name,run_metal.out.metal_out)
-
-    /*extract_top_hits() */
-
 
 }
 
