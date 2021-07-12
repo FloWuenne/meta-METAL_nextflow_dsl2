@@ -5,6 +5,6 @@ nextflow run main.nf -resume  \
 -with-timeline "../nextflow_reports/test_timeline.html" \
 --outdir "./test_out" \
 --index "./test_data/metal_list.csv" \
---plot_types "qqman" \
+--plot_types "CMplot" \
 --vep_cache_dir "/home/florian/Postdoc/References/VEP_cache" \
 --metal_scheme "SAMPLESIZE"
