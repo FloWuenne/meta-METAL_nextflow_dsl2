@@ -43,7 +43,7 @@ process annotate_variants {
 
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
-        vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol
+        vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol --fork ${params.num_forks}
 
         ## Format for FUMA online annotation : https://fuma.ctglab.nl
         echo "rsID\tID\tSYMBOL\tIMPACT" > rsIDs.txt 
@@ -64,7 +64,7 @@ process annotate_variants {
         awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -nk1,2 > sorted_metal_out.tsv
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
-        vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol
+        vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol --fork ${params.num_forks}
 
         ## Format for FUMA online annotation: https://fuma.ctglab.nl
         echo "rsID\tID\tSYMBOL\tIMPACT" > rsIDs.txt
@@ -99,5 +99,4 @@ process plot_results {
     """
     plot_metal_res.R --metal_res=${metal_result} --output_tag=${meta_file} --n_top_var=${params.top_n_var} --width=${params.plot_width} --height=${params.plot_height} --plot_types=${params.plot_types}
     """
-
 }
