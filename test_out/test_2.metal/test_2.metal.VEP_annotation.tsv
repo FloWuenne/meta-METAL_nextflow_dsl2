@@ -1,24 +1,24 @@
 ## ENSEMBL VARIANT EFFECT PREDICTOR v104.3
-## Output produced at 2021-07-12 14:02:47
+## Output produced at 2021-07-12 15:03:48
 ## Using cache in VEP_cache/homo_sapiens/104_GRCh38
 ## Using API version 104, DB version ?
-## ensembl-funcgen version 104.f1c7762
 ## ensembl-variation version 104.20f5335
 ## ensembl version 104.1af1dce
 ## ensembl-io version 104.1d3bb6e
+## ensembl-funcgen version 104.f1c7762
+## ESP version V2-SSA137
 ## gencode version GENCODE 38
 ## dbSNP version 154
+## COSMIC version 92
 ## assembly version GRCh38.p13
+## ClinVar version 20210102
+## 1000genomes version phase3
+## HGMD-PUBLIC version 20204
 ## regbuild version 1.0
 ## polyphen version 2.2.2
-## 1000genomes version phase3
-## genebuild version 2014-07
-## HGMD-PUBLIC version 20204
-## ClinVar version 20210102
-## COSMIC version 92
-## ESP version V2-SSA137
 ## sift version sift5.2.2
 ## gnomAD version r2.1.1
+## genebuild version 2014-07
 ## Column descriptions:
 ## Uploaded_variation : Identifier of uploaded variant
 ## Location : Location of variant in standard coordinate format (chr:start or chr:start-end)

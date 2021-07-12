@@ -30,6 +30,7 @@ process annotate_variants {
     val(metal_scheme)
 
     output:
+    path ("${meta_file}.FUMA_format.full.tsv.gz")
     path ("${meta_file}.FUMA_format.final.tsv.gz")
     path ("${meta_file}.VEP_annotation.tsv")
     path ("${meta_file}.VEP_annotation.tsv_summary.html")
@@ -39,19 +40,21 @@ process annotate_variants {
         """
         ## Sort Meta-analysis results for VEP
         awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -nk1,2 > sorted_metal_out.tsv
+
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
         vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol
 
         ## Format for FUMA online annotation : https://fuma.ctglab.nl
-        echo "rsID\tID\tSYMBOL" > rsIDs.txt 
-        grep -v "#" ${meta_file}.VEP_annotation.tsv | awk -F " " '{print \$13"\t"\$1"\t"\$18}' >> rsIDs.txt 
+        echo "rsID\tID\tSYMBOL\tIMPACT" > rsIDs.txt 
+        grep -v "#" ${meta_file}.VEP_annotation.tsv | awk -F " " '{print \$13"\t"\$1"\t"\$18"\t"\$14}' >> rsIDs.txt 
 
-        echo "CHR\tPOS\tREF\tALT\tPVAL\tZSCORE"  > sumstats_metal_sub.tsv
-        tail -n +2 sorted_metal_out.tsv | awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$9"\t"\$8}'  >> sumstats_metal_sub.tsv
+        echo "CHR\tPOS\tREF\tALT\tPVAL\tZSCORE" > sumstats_metal_sub.tsv
+        awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$13"\t"\$12}' sorted_metal_out.tsv >> sumstats_metal_sub.tsv
 
-        paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > sumstats.FUMA_format.tsv
-        awk -F " " '\$1 != "-" {print \$0}' sumstats.FUMA_format.tsv >> ${meta_file}.FUMA_format.final.tsv
+        paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > ${meta_file}.FUMA_format.full.tsv
+        awk -F " " '\$1 != "-" {print \$0}' ${meta_file}.FUMA_format.full.tsv >> ${meta_file}.FUMA_format.final.tsv
+        gzip ${meta_file}.FUMA_format.full.tsv
         gzip ${meta_file}.FUMA_format.final.tsv 
         """
 
@@ -63,21 +66,20 @@ process annotate_variants {
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
         vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol
 
-        ## Format for FUMA online annotation : https://fuma.ctglab.nl/\
-        echo "rsID\tID\tSYMBOL" > rsIDs.txt
-        grep -v "#" ${meta_file}.VEP_annotation.tsv | awk -F " " '{print \$13"\t"\$1"\t"\$18}' >> rsIDs.txt
+        ## Format for FUMA online annotation: https://fuma.ctglab.nl
+        echo "rsID\tID\tSYMBOL\tIMPACT" > rsIDs.txt
+        grep -v "#" ${meta_file}.VEP_annotation.tsv | awk -F " " '{print \$13"\t"\$1"\t"\$18"\t"\$14}' >> rsIDs.txt
 
         echo "CHR\tPOS\tREF\tALT\tPVAL\tBETA\tSE"  > sumstats_metal_sub.tsv
-        tail -n +2 sorted_metal_out.tsv | awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$13"\t"\$11"\t"\$12}'  >> sumstats_metal_sub.tsv
+        awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$13"\t"\$11"\t"\$12}' sorted_metal_out.tsv  >> sumstats_metal_sub.tsv
 
-        paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > sumstats.FUMA_format.tsv
-        head -1 sumstats.FUMA_format.tsv > ${meta_file}.FUMA_format.final.tsv
-        awk -F " " '\$1 != "-" {print \$0}' sumstats.FUMA_format.tsv >> ${meta_file}.FUMA_format.final.tsv
+        paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > ${meta_file}.FUMA_format.full.tsv
+        awk -F " " '\$1 != "-" {print \$0}' ${meta_file}.FUMA_format.full.tsv >> ${meta_file}.FUMA_format.final.tsv
+        gzip ${meta_file}.FUMA_format.full.tsv
         gzip ${meta_file}.FUMA_format.final.tsv
         """
 
 }
-
 
 
 process plot_results {

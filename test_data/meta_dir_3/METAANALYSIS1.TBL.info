@@ -4,6 +4,10 @@
 # Marker    - this is the marker name
 # Allele1   - the first allele for this marker in the first file where it occurs
 # Allele2   - the second allele for this marker in the first file where it occurs
+# Freq1       - weighted average of frequency for allele 1 across all studies
+# FreqSE      - corresponding standard error for allele frequency estimate
+# MinFreq     - minimum frequency for allele 1 across all studies
+# MaxFreq     - maximum frequency for allele 1 across all studies
 # Weight    - the sum of the individual study weights (typically, N) for this marker
 # Z-score   - the combined z-statistic for this marker
 # P-value   - meta-analysis p-value

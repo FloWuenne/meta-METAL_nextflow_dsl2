@@ -1,0 +1,3 @@
+metal_script,sumstats_dir
+/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/STDERR_tests/test_4.metal.txt,/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/meta_dir_4
+/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/STDERR_tests/test_5.metal.txt,/home/florian/Postdoc/Valve_disease_GWAS/nextflow_pipeline/meta-METAL_nextflow_dsl2/test_data/meta_dir_5
