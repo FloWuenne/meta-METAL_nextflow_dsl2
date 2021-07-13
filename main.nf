@@ -17,6 +17,7 @@ sumstat_files       :   ${params.sumstat_files}
 index               :   ${params.index}
 vep cache dir       :   ${params.vep_cache_dir}
 num_forks           :   ${params.num_forks}
+Significant thresh. :   ${params.sig_thresh}
 
 
 Plotting parameters

@@ -12,6 +12,10 @@
 # Z-score   - the combined z-statistic for this marker
 # P-value   - meta-analysis p-value
 # Direction - summary of effect direction for each study, with one '+' or '-' per study
+# HetISq    - I^2 statistic which measures heterogeneity on scale of 0-100%
+# HetChiSq  - chi-squared statistic in simple test of heterogeneity
+# df        - degrees of freedom for heterogeneity statistic
+# HetPVal   - P-value for heterogeneity statistic
 
 # Input for this meta-analysis was stored in the files:
 # --> Input File 1 : DGI_three_regions.mod.txt.gz

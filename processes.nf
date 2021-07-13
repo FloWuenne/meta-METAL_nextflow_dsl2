@@ -34,6 +34,7 @@ process annotate_variants {
     path ("${meta_file}.FUMA_format.final.tsv.gz")
     path ("${meta_file}.VEP_annotation.tsv")
     path ("${meta_file}.VEP_annotation.tsv_summary.html")
+    path ("${meta_file}.sig_HET.tsv.gz")
 
     script:
      if( metal_scheme == 'SAMPLESIZE')
@@ -52,10 +53,16 @@ process annotate_variants {
         echo "CHR\tPOS\tREF\tALT\tPVAL\tZSCORE" > sumstats_metal_sub.tsv
         awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$13"\t"\$12}' sorted_metal_out.tsv >> sumstats_metal_sub.tsv
 
+        ## Merge rsID information with meta-analysis parameters for FUMA formatted output
         paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > ${meta_file}.FUMA_format.full.tsv
         awk -F " " '\$1 != "-" {print \$0}' ${meta_file}.FUMA_format.full.tsv >> ${meta_file}.FUMA_format.final.tsv
         gzip ${meta_file}.FUMA_format.full.tsv
         gzip ${meta_file}.FUMA_format.final.tsv 
+
+        ## Get all variants with significant heterogeneity
+        head -1 sorted_metal_out.tsv > ${meta_file}.sig_HET.tsv
+        tail -n +2 sorted_metal_out.tsv | awk -F " " '\$15 < 0.05 {print \$0}' >> ${meta_file}.sig_HET.tsv
+        gzip ${meta_file}.sig_HET.tsv
         """
 
     else if(metal_scheme == 'STDERR')
@@ -73,10 +80,16 @@ process annotate_variants {
         echo "CHR\tPOS\tREF\tALT\tPVAL\tBETA\tSE"  > sumstats_metal_sub.tsv
         awk -F " " '{print \$1"\t"\$2"\t"\$3"\t"\$4"\t"\$13"\t"\$11"\t"\$12}' sorted_metal_out.tsv  >> sumstats_metal_sub.tsv
 
+        ## Merge rsID information with meta-analysis parameters for FUMA formatted output
         paste -d "\t" rsIDs.txt sumstats_metal_sub.tsv > ${meta_file}.FUMA_format.full.tsv
         awk -F " " '\$1 != "-" {print \$0}' ${meta_file}.FUMA_format.full.tsv >> ${meta_file}.FUMA_format.final.tsv
         gzip ${meta_file}.FUMA_format.full.tsv
         gzip ${meta_file}.FUMA_format.final.tsv
+
+        ## Get all variants with significant heterogeneity
+        head -1 sorted_metal_out.tsv > ${meta_file}.sig_HET.tsv
+        tail -n +2 sorted_metal_out.tsv | awk -F " " '\$15 < 0.05 {print \$0}' >> ${meta_file}.sig_HET.tsv
+        gzip ${meta_file}.sig_HET.tsv
         """
 
 }
@@ -93,10 +106,10 @@ process plot_results {
     output:
     path ("${meta_file}.meta_analysis.manhattan_plot.png")
     path ("${meta_file}.meta_analysis.qqplot_plot.png")
-    path ("${meta_file}.meta_analysis.top_variants.tsv")
+    path ("${meta_file}.meta_analysis.sig_variants.tsv")
 
     script:
     """
-    plot_metal_res.R --metal_res=${metal_result} --output_tag=${meta_file} --n_top_var=${params.top_n_var} --width=${params.plot_width} --height=${params.plot_height} --plot_types=${params.plot_types}
+    plot_metal_res.R --metal_res=${metal_result} --output_tag=${meta_file} --sig_thresh=${params.sig_thresh} --width=${params.plot_width} --height=${params.plot_height} --plot_types=${params.plot_types}
     """
 }
