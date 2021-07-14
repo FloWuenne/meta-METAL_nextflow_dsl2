@@ -13,7 +13,7 @@ NEXTFLOW - DSL2 - Meta-analysis using METAL with nextflow
 Meta-analysis parameters
 ===================================
 meta-analysis_files :   ${params.meta_file}
-sumstat_files       :   ${params.sumstat_files}
+sumstat_file_path   :   ${params.sumstat_file_path}
 index               :   ${params.index}
 vep cache dir       :   ${params.vep_cache_dir}
 num_forks           :   ${params.num_forks}

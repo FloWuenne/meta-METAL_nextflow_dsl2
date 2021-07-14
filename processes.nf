@@ -4,17 +4,20 @@ process run_metal {
     publishDir "${params.outdir}/${meta_file.baseName}", mode: 'copy'
 
     input:
-    tuple path(meta_file), path(sumstat_files)
+    tuple path(meta_file), path(sumstat_file_path)
     
 
     output:
     val(meta_file.baseName), emit: meta_file_name
-    path("${sumstat_files}/METAANALYSIS1.TBL"), emit: metal_out
+    path("METAANALYSIS1.TBL"), emit: metal_out
 
     script:
     """
-    cp ${meta_file} ${sumstat_files}
-    cd ${sumstat_files}
+    ls ${sumstat_file_path} > all_files.txt
+    for file_name in `cut -d "/" -f2 all_files.txt`
+    do 
+        ln -s ${sumstat_file_path}/\${file_name} ./\${file_name}
+    done
     metal ${meta_file}
     """
 }
