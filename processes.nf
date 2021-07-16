@@ -72,7 +72,8 @@ process annotate_variants {
     else if(metal_scheme == 'STDERR')
         """
         ## Sort Meta-analysis results for VEP
-        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -nk1,2 > sorted_metal_out.tsv
+        mkdir tmp_dir
+        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -nk1,2 -T ./tmp_dir > sorted_metal_out.tsv
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
         vep -i sumstats_reformat.tsv -o ${meta_file}.VEP_annotation.tsv --offline --species homo_sapiens --dir_cache ${vep_cache_dir}  --tab --pick --check_existing --symbol --fork ${params.num_forks}
