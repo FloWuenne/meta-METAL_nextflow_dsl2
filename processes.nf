@@ -10,6 +10,7 @@ process run_metal {
     output:
     val(meta_file.baseName), emit: meta_file_name
     path("METAANALYSIS1.TBL"), emit: metal_out
+    path("METAANALYSIS1.TBL.info"), emit: metal_out_info
 
     script:
     """
@@ -45,7 +46,7 @@ process annotate_variants {
         """
         ## Sort Meta-analysis results for VEP
         mkdir tmp_dir
-        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -Vk1,nk2 -T ./tmp_dir > sorted_metal_out.tsv
+        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -Vk1,2 -T ./tmp_dir > sorted_metal_out.tsv
 
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
