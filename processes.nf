@@ -11,6 +11,7 @@ process run_metal {
     val(meta_file.baseName), emit: meta_file_name
     path("METAANALYSIS1.TBL"), emit: metal_out
     path("METAANALYSIS1.TBL.info"), emit: metal_out_info
+    path("metal_command.log")
 
     script:
     """
@@ -20,6 +21,7 @@ process run_metal {
         ln -s ${sumstat_file_path}/\${file_name} ./\${file_name}
     done
     metal ${meta_file}
+    cp .command.log metal_command.log
     """
 }
 
