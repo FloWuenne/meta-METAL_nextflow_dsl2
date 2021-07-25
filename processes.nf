@@ -9,7 +9,7 @@ process run_metal {
 
     output:
     val(meta_file.baseName), emit: meta_file_name
-    path("METAANALYSIS1.TBL"), emit: metal_out
+    path("METAANALYSIS1.TBL.gz"), emit: metal_out
     path("METAANALYSIS1.TBL.info"), emit: metal_out_info
     path("metal_command.log")
 
@@ -22,6 +22,7 @@ process run_metal {
     done
     metal ${meta_file}
     cp .command.log metal_command.log
+    gzip METAANALYSIS1.TBL
     """
 }
 
@@ -48,7 +49,7 @@ process annotate_variants {
         """
         ## Sort Meta-analysis results for VEP
         mkdir tmp_dir
-        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -Vk1,2 -T ./tmp_dir > sorted_metal_out.tsv
+        zcat ${metal_result} | awk 'gsub(/(:| )+/,"\t")' | sort -t" " -Vk1,2 -T ./tmp_dir > sorted_metal_out.tsv
 
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
@@ -77,7 +78,7 @@ process annotate_variants {
         """
         ## Sort Meta-analysis results for VEP
         mkdir tmp_dir
-        awk 'gsub(/(:| )+/,"\t")' ${metal_result} | sort -t" " -Vk1,2 -T ./tmp_dir > sorted_metal_out.tsv
+        zcat ${metal_result} | awk 'gsub(/(:| )+/,"\t")' | sort -t" " -Vk1,2 -T ./tmp_dir > sorted_metal_out.tsv
 
         ## VEP
         awk -F " " '{print \$1"\t"\$2"\t"\$2"\t"\$3"/"\$4"\t+\t"\$1"_"\$2"_"\$3"_"\$4}' sorted_metal_out.tsv > sumstats_reformat.tsv
