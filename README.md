@@ -1,6 +1,8 @@
 # meta-METAL_nextflow_dsl2
 A nextflow DSL2 based pipeline to run METAL based meta-analysis and subsequent plotting of results.
 
+**!!! Currently the plotting and VEP modules are not working correctly, please check your results carefully. I haven't yet discovered what's causing the issues!** 
+
 The inspiration, some of the workflow logic and parts of the Dockerfile have been copied and adapted from [Lifebit-ai/metagwas](https://github.com/lifebit-ai/metagwas/blob/stable/Dockerfile) repository.
 In contrast to the original Lifebit repository, this workflow uses DSL2 code to run.
 
