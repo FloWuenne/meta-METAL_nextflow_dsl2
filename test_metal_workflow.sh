@@ -8,7 +8,8 @@ nextflow run main.nf -resume  \
 --plot_types "CMplot" \
 --vep_cache_dir "/home/florian/Postdoc/References/VEP_cache" \
 --metal_scheme "SAMPLESIZE" \
---num_forks 3
+--num_forks 3 \
+--ID_sep ":"
 
 # ## Test with STDERR SCHEME
 work_dir="$PWD"
@@ -20,4 +21,5 @@ nextflow run main.nf -resume  \
 --plot_types "CMplot" \
 --vep_cache_dir "/home/florian/Postdoc/References/VEP_cache" \
 --metal_scheme "STDERR" \
---num_forks 3 
+--num_forks 3 \
+--ID_sep ":"

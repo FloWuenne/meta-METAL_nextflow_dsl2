@@ -39,9 +39,9 @@ workflow {
 
    run_metal(samples_ch)
 
-   /*annotate_variants(run_metal.out.meta_file_name,run_metal.out.metal_out, params.vep_cache_dir, params.metal_scheme)
+   annotate_variants(run_metal.out.meta_file_name,run_metal.out.metal_out, params.vep_cache_dir, params.metal_scheme)
 
-   plot_results(run_metal.out.meta_file_name,run_metal.out.metal_out) */
+   plot_results(run_metal.out.meta_file_name,run_metal.out.metal_out)
 
 }
 
