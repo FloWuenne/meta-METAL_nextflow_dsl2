@@ -18,11 +18,13 @@ args         <- argsL
 if(is.null(args$width)) {args$width = 1600} else {args$width=as.numeric(args$width)}
 if(is.null(args$height)) {args$height = 1200} else {args$height=as.numeric(args$height)}
 if(is.null(args$plot_types)) {args$plot_types = "qqman"} else {args$plot_types=args$plot_types}
+if(is.null(args$ID_sep)) {args$ID_sep = ":"} else {args$ID_sep=args$ID_sep}
 
 # required arguments
 metal_res_file  <- args$metal_res
 output_tag      <- args$output_tag
 plot_type       <- args$plot_types
+ID_sep          <- args$ID_sep
 
 # optional arguments
 width              <- args$width
@@ -43,11 +45,13 @@ meta_res_original <- data.table::fread(metal_res_file)
 
 ## Reformat columns
 colnames(meta_res_original) <- gsub("-","_",colnames(meta_res_original))
+
 meta_res <- meta_res_original %>%
-  separate(MarkerName,into = c("CHR","BP","ALLELE1","ALLELE2")) %>%
+  separate(MarkerName,into = c("CHR","BP","ALLELE1","ALLELE2"), sep = ID_sep) %>%
   mutate("CHR" = as.numeric(CHR),
          "BP" = as.numeric(BP),
-         "SNP" = paste(CHR,BP,sep = "_")) %>%
+         "SNP" = paste(CHR,BP,sep = "_"),
+         "P_value" = as.numeric(P_value)) %>%
   arrange(CHR,BP)
 
 ## If qqman is selected
@@ -78,50 +82,18 @@ if(plot_type == "qqman"){
   dev.off
   
 }else if(plot_type == "CMplot"){
+  
   meta_res <- meta_res %>%
     select(SNP,CHR,BP,P_value)
   
   manhattan_res_cm <- meta_res %>%
     subset(P_value < 0.05)
   
-  ## Highlight top significant SNPs on Manhattan plot
-  # significant_variants <- manhattan_res_cm %>%
-  #   subset(P_value < 5e-8) %>%
-  #   group_by(CHR) %>%
-  #   arrange(BP) %>%
-  #   mutate("index" = row_number(),
-  #          "distance_left" = BP - lag(BP, k = 1, default = BP[1]),
-  #          "distance_right" = lead(BP, k = 1) - BP,
-  #          "independent" = if_else((distance_left > 1000000 | is.na(distance_left) | distance_left == 0) &
-  #                                    (distance_right > 1000000 | is.na(distance_right) | distance_right == 0),"yes","no"))
-  # 
-  # significant_snp_ids <- c()
-  # for(chrom in unique(significant_variants$CHR)){
-  #   region_index_vector <- c()
-  #   region_index <- 1
-  #   chr_subset <- subset(significant_variants,CHR == chrom)
-  #   for(this_index in chr_subset$index){
-  #     region_index_vector <- c(region_index_vector,region_index)
-  #     ## For last variant, only test distance to SNP on the left
-  #     if(this_index != max(chr_subset$index)){
-  #       if(chr_subset[this_index,]$distance_right > 1000000 & chr_subset[this_index+1,]$distance_left > 1000000 ){
-  #         region_index <- region_index + 1
-  #       }
-  #     }
-  #   }
-  #   chr_subset$region_index <- region_index_vector
-  #   chr_subset <- chr_subset %>%
-  #     group_by(region_index) %>%
-  #     top_n(-1,P_value)
-  #   significant_snp_ids <- c(significant_snp_ids,chr_subset$SNP)
-  # }
-  
   ## Plot the manhattan plot
   png(filename = paste0(output_tag, ".meta_analysis.manhattan_plot.png"),
       width    = width,
       height   = height)
   CMplot(manhattan_res_cm,type="p",plot.type="m",LOG10=TRUE,col=c("grey30","grey60"),
-         #highlight=significant_snp_ids, highlight.text=significant_snp_ids, highlight.col=c("red"),
          threshold=c(5e-05,5e-08),threshold.lty=c(2,1), threshold.lwd=c(1,1),
          file="jpg",memo="",dpi=300,
          file.output=FALSE,verbose=FALSE,chr.labels.angle=45,

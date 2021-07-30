@@ -121,6 +121,6 @@ process plot_results {
 
     script:
     """
-    plot_metal_res.R --metal_res=${metal_result} --output_tag=${meta_file} --sig_thresh=${params.sig_thresh} --width=${params.plot_width} --height=${params.plot_height} --plot_types=${params.plot_types}
+    plot_metal_res.R --metal_res=${metal_result} --output_tag=${meta_file} --sig_thresh=${params.sig_thresh} --width=${params.plot_width} --height=${params.plot_height} --plot_types=${params.plot_types} --ID_sep=${params.ID_sep}
     """
 }
